@@ -41,6 +41,15 @@ int realloc_line(char **line, size_t *n)
 }
 
 /**
+ * prompt - prints the shell prompt for the user
+ */
+void prompt(void)
+{
+	printf("$ ");
+	fflush(stdout);
+}
+
+/**
  * get_line - reads a line of input
  * @line: pointer to store the address
  * @n: stores the allocated size
@@ -70,6 +79,8 @@ ssize_t get_line(char **line, size_t *n, FILE *stream)
 	}
 	while (1)
 	{
+		if (read_chars == -1)
+			return (-1);
 		if (read_chars == 0)
 			break;
 		x = buffer[buffer_index++];
