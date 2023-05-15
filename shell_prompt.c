@@ -10,10 +10,16 @@ int main(int argc, char **argv)
 	char *command;
 	size_t x = 0;
 	ssize_t cmdline;
+	char *tokens[MAX_TOKENS];
+	int numwords;
 
-	/* voiding th argc and argv for now */
-	(void)argc; (void)argv;
+	/* void for now */
+	(void)argv;
 
+	if (argc > 1)
+	{
+		return (0);
+	}
 	while (1)
 	{
 		prompt();
@@ -22,6 +28,16 @@ int main(int argc, char **argv)
 		{
 			printf("exiting shell...\n");
 			return (-1);
+		}
+		numwords = tokenizer(command, " \t\r\n\a", tokens);
+		if (numwords > 0)
+		{
+			if (strcmp(tokens[0], "my_environ") == 0)
+				my_environ();
+			else
+			{
+				handle_unrecognized_command(tokens);
+			}
 		}
 		free(command);
 	}
