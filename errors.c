@@ -5,7 +5,7 @@
  */
 void display_error(const char *message)
 {
-	fprintf(stderr, "Command not found: %s\n", message);
+	 fprintf(stderr, "%s: not found\n", message);
 }
 
 /**
@@ -14,5 +14,10 @@ void display_error(const char *message)
  */
 void handle_unrecognized_command(char *tokens[])
 {
-	display_error(tokens[0]);
+	if (tokens[1] != NULL && strcmp(tokens[1], "|") == 0 && tokens[2] != NULL)
+	{
+		fprintf(stderr, "%s: 1: %s: not found\n", tokens[0], tokens[2]);
+	}
+	else
+		display_error(tokens[0]);
 }
