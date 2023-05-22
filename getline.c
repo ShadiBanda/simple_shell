@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <stdbool.h>
 /**
  * read_buf - Read data into the buffer
  * @buffer: The buffer to read data into
@@ -34,6 +35,7 @@ int realloc_line(char **line, size_t *n)
 	temp = realloc(*line, *n * sizeof(char));
 	if (temp == NULL)
 	{
+		*line = temp;
 		return (-1);
 	}
 	*line = temp;
@@ -65,7 +67,6 @@ ssize_t get_line(char **line, size_t *n, FILE *stream)
 	size_t length = 0;
 	int x;
 
-	read_chars = read_buf(buffer, &buffer_index, &buffer_size, stream);
 	if (line == NULL || n == NULL)
 	{
 		return (-1);
@@ -79,6 +80,7 @@ ssize_t get_line(char **line, size_t *n, FILE *stream)
 	}
 	while (1)
 	{
+		read_chars = read_buf(buffer, &buffer_index, &buffer_size, stream);
 		if (read_chars == -1)
 			return (-1);
 		if (read_chars == 0)
