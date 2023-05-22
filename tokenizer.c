@@ -8,18 +8,32 @@
  */
 int tokenizer(char *str, const char *delimiters, char *tokens[])
 {
-	int num_words = 0;
+	int numwords = 0;
 	char *token = strtok(str, delimiters);
 
-	while (token != NULL && num_words < MAX_TOKENS)
+	while (token != NULL && numwords < MAX_TOKENS)
 	{
-		if (strlen(token) > 0)
+		if (_strlen(token) > 0)
 		{
-			tokens[num_words] = token;
-			num_words++;
-			token = strtok(NULL, delimiters);
+			tokens[numwords] = token;
+			numwords++;
 		}
 		token = strtok(NULL, delimiters);
 	}
-	return (num_words);
+	return (numwords);
+}
+
+/**
+ * free_tokens - Free the memory allocated for command tokens
+ * @tokens: Array of command tokens
+ */
+void free_tokens(char *tokens[])
+{
+	int x = 0;
+
+	while (tokens[x] != NULL)
+	{
+		free(tokens[x]);
+		x++;
+	}
 }
