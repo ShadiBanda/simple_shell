@@ -1,9 +1,11 @@
 #include "shell.h"
+
 /**
- * main - entry point
- * argc: argument count
- * argv: ptr to array of strings
- * return: 0 or otherwise
+ * main - Entry point of the shell program
+ * @argc: The number of command-line arguments
+ * @argv: An array of strings containing the command-line arguments
+ *
+ * Return: 0 on successful execution
  */
 int main(int argc, char **argv)
 {
@@ -22,7 +24,7 @@ int main(int argc, char **argv)
 			if (argc > 2)
 				list_dir(argv[2], "");
 			else
-				list_dir(".","");
+				list_dir(".", "");
 		}
 		return (0);
 	}
@@ -43,23 +45,51 @@ int main(int argc, char **argv)
 			if (_strcmp(tokens[0], "my_environ") == 0)
 				my_environ();
 			else if (_strcmp(tokens[0], "ls") == 0)
-			{
-				if (numwords > 1)
-					list_dir(".", tokens[1]);
-				else
-					list_dir(".", "");
-			}
+				execute_ls_command(numwords, tokens);
+			else if (_strcmp(tokens[0], "exit") == 0)
+				exit_shell();
 			else
-			{
-				if (cmd_path != NULL)
-				{
-					_exec_command(cmd_path, env);
-				}
-				else
-					handle_unrecognized_command(tokens);
-			}
+				execute_command(cmd_path, tokens, env);
 		}
 	}
+
 	free(command);
 	return (0);
+}
+
+/**
+ * execute_ls_command - Executes the "ls" command
+ * @numwords: The number of words/tokens
+ * @tokens: The array of tokens
+ */
+void execute_ls_command(int numwords, char **tokens)
+{
+	if (numwords > 1)
+		list_dir(".", tokens[1]);
+
+	else
+		list_dir(".", "");
+}
+
+/**
+ * exit_shell - Exits the shell
+ */
+void exit_shell(void)
+{
+	printf("Exiting shell...\n");
+	exit(0);
+}
+
+/**
+ * execute_command - Executes a command
+ * @cmd_path: The path of the command
+ * @tokens: The array of tokens
+ * @env: The environment variables
+ */
+void execute_command(char *cmd_path, char **tokens, char **env)
+{
+	if (cmd_path != NULL)
+		_exec_command(cmd_path, env);
+	else
+		handle_unrecognized_command(tokens);
 }
