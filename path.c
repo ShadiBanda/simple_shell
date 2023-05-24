@@ -1,4 +1,4 @@
-#include "shell.h"
+# include "shell.h"
 
 /**
  * check_executable - Checks if the given program is executable.
@@ -6,8 +6,7 @@
  * @argv: An array of command-line argument strings.
  *
  * This function is called in the child process.
- * If the program is executable, it is executed
- * with the provided arguments.
+ * If the program is executable, it is executed with the provided arguments.
  * If the program is not executable, an error message is printed.
  */
 void check_executable(const char *path, char *argv[])
@@ -33,12 +32,44 @@ void print_error(const char *msg)
 }
 
 /**
+ * execute_program - Executes the given program with the provided arguments.
+ * @program_path: The path to the program.
+ * @argv: An array of command-line argument strings.
+ */
+void execute_program(const char *program_path, char *argv[])
+{
+	pid_t child_pid = fork();
+
+	if (child_pid < 0)
+	{
+		perror("fork");
+		exit(EXIT_FAILURE);
+	}
+	else if (child_pid == 0)
+	{
+		check_executable(program_path, argv);
+	}
+	else
+	{
+		int status;
+
+		wait(&status);
+		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+		{
+			/* Child process exited with status 0 (success) */
+			exit(EXIT_SUCCESS);
+		}
+	}
+}
+
+/**
  * search_program - Searches for the given program
  * in the directories specified by the PATH environment variable.
  *
  * @name: The name of the program.
  * @path_env: The value of the PATH environment variable.
- * @argv: An array of command-line argument strings.
+ * @argv: An array of command-line
+ * argument strings.
  *
  * This function searches for the program
  * in each directory specified by the PATH environment variable.
@@ -61,7 +92,11 @@ void search_program(const char *name, const char *path_env, char *argv[])
 		if (program_path == NULL)
 			print_error("Memory allocation failed");
 
-		check_executable(program_path, argv);
+		strcpy(program_path, path_token);
+		strcat(program_path, "/");
+		strcat(program_path, name);
+
+		execute_program(program_path, argv);
 
 		free(program_path);
 		path_token = strtok(NULL, ":");
@@ -87,7 +122,6 @@ int main(int argc, char *argv[])
 		return (1);
 	}
 
-	/* Get the program name and PATH environment variable */
 	const char *program_name = argv[1];
 	const char *path_env = getenv("PATH");
 
@@ -101,3 +135,4 @@ int main(int argc, char *argv[])
 
 	return (0);
 }
+

@@ -21,11 +21,8 @@
 
 int tokenizer(char *str, const char *delimiters, char *tokens[]);
 
-/* interactive_mode*/
-
 /* builtin1.c */
-
-/* builtin2.c */
+void execute_ls_command(int numwords, char **tokens);
 
 /* Errors */
 void display_error(const char *message);
@@ -37,11 +34,17 @@ int my_environ(char *details);
 /* Pars */
 int command_check(const char *command);
 
+/* Path */
+void print_error(const char *message);
+void check_executable(const char *program_path, char *const *argv);
+void search_program(const char *name, const char *path_env, char *const *argv);
+
 /* getline.c */
-ssize_t read_buf(char *buffer, size_t *buffer_index, size_t *buffer_size, FILE *stream);
+ssize_t read_buf(char *buf, size_t *buf_index, size_t *buf_size, FILE *stream);
 int realloc_line(char **line, size_t *n);
 ssize_t get_line(char **line, size_t *n, FILE *stream);
 
+<<<<<<< HEAD
 /* Exit.c */
 int exit_shell(char **arr);
 
@@ -56,5 +59,17 @@ void print_error(const char *msg);
 void execute_program(const char *program_path, char *argv[]);
 void search_program(const char *name, const char *path_env, char *argv[]);
 int main(int argc, char *argv[]);
+=======
+/* Strings */
+int _strlen(char *s);
+char *_strcpy(char *dest, char *src);
+int _strcmp(char *s1, char *s2);
+char *getenvr(const char *name, char *env[]);
+
+/* Shell prompt */
+void execute_ls_command(int numwords, char **tokens);
+void exit_shell(void);
+void execute_command(char *cmd_path, char **tokens, char **env);
+>>>>>>> f745d6b2bc36264ad46bceca44184eb2896c0dfe
 
 #endif

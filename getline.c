@@ -2,23 +2,22 @@
 #include <stdbool.h>
 /**
  * read_buf - Read data into the buffer
- * @buffer: The buffer to read data into
- * @buffer_index: The current index in the buffer
- * @buffer_size: The size of the buffer
+ * @buf: The buffer to read data into
+ * @buf_index: The current index in the buffer
+ * @buf_size: The size of the buffer
  * @stream: The input stream to read from
  * Return: buffer size
  */
-ssize_t read_buf(char *buffer, size_t *buffer_index,
-		size_t *buffer_size, FILE *stream)
+ssize_t read_buf(char *buf, size_t *buf_index, size_t *buf_size, FILE *stream)
 {
-	if (*buffer_index >= *buffer_size)
+	if (*buf_index >= *buf_size)
 	{
-		*buffer_size = read(fileno(stream), buffer, BUFFER_SIZE);
-		if (*buffer_size == 0)
+		*buf_size = read(fileno(stream), buf, BUFFER_SIZE);
+		if (*buf_size == 0)
 			return (-1);
-		*buffer_index = 0;
+		*buf_index = 0;
 	}
-	return (*buffer_size);
+	return (*buf_size);
 }
 
 /**
