@@ -35,12 +35,10 @@ int command_check(const char *command);
 /* Path */
 void print_error(const char *message);
 void check_executable(const char *program_path, char *const *argv);
-void search_program(const char *program_name, const char *path_env, 
-		char *const *argv)
+void search_program(const char *name, const char *path_env, char *const *argv);
 
 /* getline.c */
-ssize_t read_buf(char *buffer, size_t *buffer_index, 
-		size_t *buffer_size, FILE *stream);
+ssize_t read_buf(char *buf, size_t *buf_index, size_t *buf_size, FILE *stream);
 int realloc_line(char **line, size_t *n);
 ssize_t get_line(char **line, size_t *n, FILE *stream);
 

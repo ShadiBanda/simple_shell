@@ -40,12 +40,11 @@ void check_executable(const char *program_path, char *const *argv)
  * search_program - Search for the executable program
  * in the directories of the PATH.
  *
- * @program_name: The name of the program to search for.
+ * @name: The name of the program to search for.
  * @path_env: The value of the PATH environment variable.
  * @argv: The array of command-line.
  */
-void search_program(const char *program_name,
-		const char *path_env, char *const *argv)
+void search_program(const char *name, const char *path_env, char *const *argv)
 {
 	char *path_env_copy = strdup(path_env);
 	char *path_token = strtok(path_env_copy, ":");
@@ -56,8 +55,7 @@ void search_program(const char *program_name,
 	while (path_token != NULL)
 	{
 		char *program_path;
-		size_t program_path_len = _strlen(path_token) + 
-			_strlen(program_name) + 2;
+		size_t program_path_len = _strlen(path_token) + _strlen(name) + 2;
 
 		program_path = malloc(program_path_len);
 		if (program_path == NULL)
@@ -66,7 +64,7 @@ void search_program(const char *program_name,
 			print_error("Memory allocation failed");
 		}
 
-		sprintf(program_path, "%s/%s", path_token, program_name);
+		sprintf(program_path, "%s/%s", path_token, name);
 		check_executable(program_path, argv);
 
 		free(program_path);
@@ -74,7 +72,7 @@ void search_program(const char *program_name,
 	}
 
 	free(path_env_copy);
-	fprintf(stderr, "Error: Program '%s' not found in PATH.\n", program_name);
+	fprintf(stderr, "Error: Program '%s' not found in PATH.\n", name);
 	exit(1);
 }
 
