@@ -14,6 +14,8 @@
 
 #define BUFFER_SIZE 1024
 
+/* Global environment */
+
 /* Tokenizer */
 #define MAX_TOKENS 100
 
@@ -39,5 +41,20 @@ int command_check(const char *command);
 ssize_t read_buf(char *buffer, size_t *buffer_index, size_t *buffer_size, FILE *stream);
 int realloc_line(char **line, size_t *n);
 ssize_t get_line(char **line, size_t *n, FILE *stream);
+
+/* Exit.c */
+int exit_shell(char **arr);
+
+/* String.c */
+int _strlen(char *s);
+char *_strcpy(char *dest, char *src);
+int _strcmp(char *s1, char *s2);
+
+/* Path.c */
+void check_executable(const char *path, char *argv[]);
+void print_error(const char *msg);
+void execute_program(const char *program_path, char *argv[]);
+void search_program(const char *name, const char *path_env, char *argv[]);
+int main(int argc, char *argv[]);
 
 #endif
