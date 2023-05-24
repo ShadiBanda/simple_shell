@@ -1,4 +1,30 @@
 #include "shell.h"
+/**
+ * getenvr - retrieves the value of an
+ * environment
+ * @name: ptr to address of name value
+ * @env: ptr to environment array
+ * Return: value of env on success or NULL
+ */
+char *getenvr(const char *name, char *env[])
+{
+	size_t name_length = 0;
+	int x;
+
+	if (name == NULL || env == NULL)
+	{
+		return (NULL);
+	}
+	for (x = 0; env[x] != NULL; x++)
+	{
+		if(_strncmp(name, env[x], name_length) == 0 
+				&& env[x][name_length] == '=')
+		{
+			return (env[x] + name_length + 1);
+		}
+	}
+	return (NULL);
+}
 
 /**
  * _strlen - returns the length of a string

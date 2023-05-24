@@ -72,15 +72,6 @@ void execute_ls_command(int numwords, char **tokens)
 }
 
 /**
- * exit_shell - Exits the shell
- */
-void exit_shell(void)
-{
-	printf("Exiting shell...\n");
-	exit(0);
-}
-
-/**
  * execute_command - Executes a command
  * @cmd_path: The path of the command
  * @tokens: The array of tokens

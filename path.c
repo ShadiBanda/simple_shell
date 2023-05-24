@@ -56,7 +56,8 @@ void search_program(const char *program_name,
 	while (path_token != NULL)
 	{
 		char *program_path;
-		size_t program_path_len = strlen(path_token) + strlen(program_name) + 2;
+		size_t program_path_len = _strlen(path_token) + 
+			_strlen(program_name) + 2;
 
 		program_path = malloc(program_path_len);
 		if (program_path == NULL)
