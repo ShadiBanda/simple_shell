@@ -1,71 +1,66 @@
 #include "shell.h"
 
 /**
- * print_error - Print error message and exit with a non-zero status.
- * @message: The error message to be printed.
+ * check_executable - Checks if the given program is executable.
+ * @path: The path to the program.
+ * @argv: An array of command-line argument strings.
  *
- * Description: This function prints the provided error message to stderr and
- *              exits the program with a non-zero status.
+ * This function is called in the child process.
+ * If the program is executable, it is executed
+ * with the provided arguments.
+ * If the program is not executable, an error message is printed.
  */
-void print_error(const char *message)
+void check_executable(const char *path, char *argv[])
 {
-	fprintf(stderr, "Error: %s\n", message);
+	if (access(path, X_OK) == 0)
+	{
+		execv(path, argv);
+		perror("execv");
+		exit(EXIT_FAILURE);
+	}
+}
+
+/**
+ * print_error - Prints an error message and exits.
+ * @msg: The error message to print.
+ *
+ * This function is used to print error messages and terminate the program.
+ */
+void print_error(const char *msg)
+{
+	fprintf(stderr, "Error: %s\n", msg);
 	exit(EXIT_FAILURE);
 }
 
 /**
- * check_executable - Check if the program is executable in the given path.
- * @program_path: The full path of the program.
- * @argv: The array of command-line argument strings.
- * Description: This function checks if the specified program is executable
- *              in the given path. If it is executable, it is executed using
- *              execve. Otherwise, an error message is printed, and the program
- *              exits with a non-zero status.
- */
-void check_executable(const char *program_path, char *const *argv)
-{
-	char **environ = NULL;
-
-	if (access(program_path, X_OK) == 0)
-	{
-		execve(program_path, argv + 1, environ);
-		perror("execve");
-		free((void *)program_path);
-		exit(1);
-	}
-	free((void *)program_path);
-}
-
-/**
- * search_program - Search for the executable program
- * in the directories of the PATH.
+ * search_program - Searches for the given program
+ * in the directories specified by the PATH environment variable.
  *
- * @program_name: The name of the program to search for.
+ * @name: The name of the program.
  * @path_env: The value of the PATH environment variable.
- * @argv: The array of command-line.
+ * @argv: An array of command-line argument strings.
+ *
+ * This function searches for the program
+ * in each directory specified by the PATH environment variable.
+ * If the program is found, it is executed with the provided arguments.
+ * If the program is not found, an error message is printed.
  */
-void search_program(const char *program_name,
-		const char *path_env, char *const *argv)
+void search_program(const char *name, const char *path_env, char *argv[])
 {
 	char *path_env_copy = strdup(path_env);
-	char *path_token = strtok(path_env_copy, ":");
 
 	if (path_env_copy == NULL)
 		print_error("Memory allocation failed");
 
+	char *path_token = strtok(path_env_copy, ":");
+
 	while (path_token != NULL)
 	{
-		char *program_path;
-		size_t program_path_len = strlen(path_token) + strlen(program_name) + 2;
+		char *program_path = malloc(strlen(path_token) + strlen(name) + 2);
 
-		program_path = malloc(program_path_len);
 		if (program_path == NULL)
-		{
-			free(path_env_copy);
 			print_error("Memory allocation failed");
-		}
 
-		sprintf(program_path, "%s/%s", path_token, program_name);
 		check_executable(program_path, argv);
 
 		free(program_path);
@@ -73,8 +68,8 @@ void search_program(const char *program_name,
 	}
 
 	free(path_env_copy);
-	fprintf(stderr, "Error: Program '%s' not found in PATH.\n", program_name);
-	exit(1);
+	fprintf(stderr, "Error: Program '%s' not found in PATH.\n", name);
+	exit(EXIT_FAILURE);
 }
 
 /**
@@ -86,19 +81,23 @@ void search_program(const char *program_name,
  */
 int main(int argc, char *argv[])
 {
-	const char *program_name;
-	const char *path_env;
+	if (argc < 2)
+	{
+		fprintf(stderr, "Usage: %s <program>\n", argv[0]);
+		return (1);
+	}
 
-	if (argc != 2)
-		print_error("Usage: program_name <file-to-exec>");
-
-	program_name = argv[1];
-	path_env = getenv("PATH");
+	/* Get the program name and PATH environment variable */
+	const char *program_name = argv[1];
+	const char *path_env = getenv("PATH");
 
 	if (path_env == NULL)
-		print_error("PATH environment variable not set");
+	{
+		fprintf(stderr, "Error: PATH environment variable not set.\n");
+		return (1);
+	}
 
-	search_program(program_name, path_env, argv);
+	search_program(program_name, path_env, argv + 1);
 
 	return (0);
 }
