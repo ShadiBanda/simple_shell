@@ -1,12 +1,12 @@
 #include "shell.h"
 /**
- * check_command - Check if a command exists in the list of supported commands
+ * command_check - Check if a command exists in the list of supported commands
  * @command: The command to check
  * Return: 1 if the command exists, 0 otherwise
  */
 int command_check(const char *command)
 {
-	static const char *command_list[] = {
+	static const char *const command_list[] = {
 		"ls",
 		"cd",
 		"exit",
