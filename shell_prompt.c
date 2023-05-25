@@ -77,10 +77,10 @@ void run_shell(char **env)
 }
 
 /**
- * main - entry point
+ * main - entry point for shell
  * @argc: argument count
  * @argv: ptr to array of strings
- * return: 0 or otherwise
+ * Return: 0 or otherwise
  */
 int main(int argc, char **argv)
 {
