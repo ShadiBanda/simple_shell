@@ -20,9 +20,9 @@ void handle_command(char **tokens, char **env)
 	else if (_strcmp(tokens[0], "exit") == 0)
 	{
 		if (tokens[1] != NULL)
-			_exiting(tokens[1]);
+			exit_shell(tokens);
 		else
-			_exiting(NULL);
+			exit_shell(NULL);
 	}
 	else
 	{
