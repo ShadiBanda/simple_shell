@@ -40,38 +40,48 @@ void execute_program(const char *program_path, char *argv[])
 {
 	pid_t child_pid = fork();
 
-	if (child_pid < 0)
+	if (strcmp(program_path, "echo") == 0)
 	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	else if (child_pid == 0)
-	{
-		check_executable(program_path, argv);
+		int x;
+
+		for (x = 1; argv[x] != NULL; x++)
+			printf("%s ", argv[x]);
+		printf("\n");
 	}
 	else
 	{
-		int status;
-
-		waitpid(child_pid, &status, 0);
-		if (WIFEXITED(status))
+		if (child_pid < 0)
 		{
-			int exit_status = WEXITSTATUS(status);
+			perror("fork");
+			exit(EXIT_FAILURE);
+		}
+		else if (child_pid == 0)
+		{
+			check_executable(program_path, argv);
+		}
+		else
+		{
+			int status;
 
-			if (exit_status != 0)
+			waitpid(child_pid, &status, 0);
+			if (WIFEXITED(status))
 			{
-				fprintf(stderr, "Program '%s' exited with non-zero status: %d\n",
-						program_path, exit_status);
+				int exit_status = WEXITSTATUS(status);
+				
+				if (exit_status != 0)
+				{
+					fprintf(stderr, "Program '%s' exited with non-zero status: %d\n",
+							program_path, exit_status);
+					_exit(EXIT_FAILURE);
+				}
+			}
+			else if (WIFSIGNALED(status))
+			{
+				fprintf(stderr, "Program '%s' terminated by signal: %d\n",
+						program_path, WTERMSIG(status));
 				_exit(EXIT_FAILURE);
 			}
 		}
-		else if (WIFSIGNALED(status))
-		{
-			fprintf(stderr, "Program '%s' terminated by signal: %d\n",
-					program_path, WTERMSIG(status));
-			_exit(EXIT_FAILURE);
-		}
-		return;
 	}
 }
 

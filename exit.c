@@ -6,29 +6,24 @@
 /**
  * exit_shell - Exit the shell.
  * @arr: Array of command arguments.
- * Return: Integer representing the exit code.
+ * Return: Integer representing the exit code or -1
  */
 int exit_shell(char **arr)
 {
-	int i = 0;
+	int exit_code = 0;
 
 	if (arr[1] == NULL)
-	{
 		return (0);
-	}
 	else
 	{
-		i = atoi(arr[1]);
-		if (i == 0)
+		exit_code = atoi(arr[1]);
+		if (exit_code == 0)
 		{
 			write(STDERR_FILENO, "exit: ", 6);
 			write(STDERR_FILENO, arr[1], strlen(arr[1]));
 			write(STDERR_FILENO, ": numeric argument required\n", 28);
-			return (-1); /* Return -1 to indicate an error*/
-		}
-		else
-		{
-			return (i);
+			return (-1);
 		}
 	}
+	return (exit_code);
 }

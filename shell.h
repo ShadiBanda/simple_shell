@@ -56,4 +56,10 @@ char *_strcpy(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
 char *getenvr(const char *name, char *env[]);
 
+/* Shell_prompt */
+void handle_commandtoo(char **tokens, int num_tokens);
+
+/* cmd with path */
+void execute_command_with_path(char *command, char **args);
+
 #endif

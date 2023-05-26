@@ -8,6 +8,7 @@ int command_check(const char *command)
 {
 	static const char *const command_list[] = {
 		"ls",
+		"echo",
 		"cd",
 		"exit",
 		"my_environ",

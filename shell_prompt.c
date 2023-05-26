@@ -69,7 +69,7 @@ void process_input(char *command)
 				exit_shell(NULL);
 		}
 		else
-			handle_command(tokens);
+			handle_commandtoo(tokens, numwords);
 	}
 }
 
@@ -96,6 +96,27 @@ void run_shell(void)
 	}
 	free(command);
 	command = NULL;
+}
+
+/**
+ * handle_commandtoo - handles commands with more arguments
+ * @tokens: input
+ * @num_tokens: number of tokens found
+ */
+void handle_commandtoo(char **tokens, int num_tokens)
+{
+	if (_strcmp(tokens[0], "echo") == 0)
+	{
+		int x;
+
+		for (x = 1; x < num_tokens; x++)
+		{
+			printf("%s ", tokens[x]);
+		}
+		printf("\n");
+		return;
+	}
+	execute_command_with_path(tokens[0], tokens);
 }
 
 /**
