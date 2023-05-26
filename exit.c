@@ -9,19 +9,21 @@
  * @arr: Array of command arguments.
  * Return: Integer representing the exit code or -1
  */
-int exit_shell(char *arr)
+int exit_shell(char **arr)
 {
 	int exit_code = 0;
 
-	if (arr == NULL)
-		return (0);
-	exit_code = atoi(arr);
-	if (exit_code == 0)
+	if (arr && arr[1] != NULL)
 	{
-		write(STDERR_FILENO, "exit: ", 6);
-		write(STDERR_FILENO, arr, strlen(arr));
-		write(STDERR_FILENO, ": numeric argument required\n", 28);
-		return (-1);
+		if (exit_code == 0 && strcmp(arr[1], "0") != 0)
+		{
+			fprintf(stderr, "exit: %s: numeric argument required\n", arr[1]);
+			return (-1);
+		}
+		else
+			exit(exit_code);
 	}
-	return (exit_code);
+	else
+		exit(0);
+	return (0);
 }
