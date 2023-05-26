@@ -27,9 +27,17 @@ void handle_command(char **tokens)
 		if (tokens[1] != NULL && _strcmp(tokens[1], "-l") == 0)
 		{
 			if (tokens[2] != NULL)
-				search_program("ls", getenv("PATH"), tokens + 2);
+			{
+				execv("/bin/ls", tokens);
+				perror("execv");
+				exit(EXIT_FAILURE);
+			}
 			else
-				search_program("ls", getenv("PATH"), tokens);
+			{
+				execv("/bin/ls", tokens);
+				perror("execv");
+				exit(EXIT_FAILURE);
+			}
 		}
 		else
 		{
@@ -37,15 +45,6 @@ void handle_command(char **tokens)
 				handle_unrecognized_command(tokens);
 		}
 	}
-	else if (_strcmp(tokens[0], "exit") == 0)
-	{
-		if (tokens[1] != NULL)
-			exit_shell(tokens);
-		else
-			exit_shell(NULL);
-	}
-	else
-		handle_unrecognized_command(tokens);
 }
 
 /**
@@ -62,7 +61,17 @@ void process_input(char *command)
 	numwords = tokenizer(command, " \t\r\n\a", tokens);
 	tokens[numwords] = NULL;
 	if (numwords > 0)
-		handle_command(tokens);
+	{
+		if (_strcmp(tokens[0], "exit") == 0)
+		{
+			if (tokens[1] != NULL)
+				exit_shell(tokens);
+			else
+				exit_shell(NULL);
+		}
+		else
+			handle_command(tokens);
+	}
 }
 
 /**
@@ -88,6 +97,7 @@ void run_shell(void)
 		process_input(command);
 	}
 	free(command);
+	command = NULL;
 }
 
 /**
