@@ -68,8 +68,10 @@ void process_input(char *command)
 			else
 				exit_shell(NULL);
 		}
-		else
+		else if (_strcmp(tokens[0], "echo") == 0)
 			handle_commandtoo(tokens, numwords);
+		else
+			handle_command(tokens);
 	}
 }
 
@@ -105,17 +107,14 @@ void run_shell(void)
  */
 void handle_commandtoo(char **tokens, int num_tokens)
 {
-	if (_strcmp(tokens[0], "echo") == 0)
+	int x;
+	
+	for (x = 1; x < num_tokens; x++)
 	{
-		int x;
-
-		for (x = 1; x < num_tokens; x++)
-		{
-			printf("%s ", tokens[x]);
-		}
-		printf("\n");
-		return;
+		printf("%s ", tokens[x]);
 	}
+	printf("\n");
+	return;
 	execute_command_with_path(tokens[0], tokens);
 }
 
