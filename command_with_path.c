@@ -1,6 +1,6 @@
 #include "shell.h"
 /**
- * execute_command_with_path - Execute a command by searching for 
+ * execute_command_with_path - Execute a command by searching for
  * its executable in the PATH
  * @command: The command to execute
  * @args: The arguments for the command
@@ -27,14 +27,12 @@ void execute_command_with_path(char *command, char **args)
 	}
 	else
 	{
-		do
-		{
+		do {
 			if (waitpid(pid, &status, WUNTRACED) == -1)
 			{
 				perror("Waitpid error");
 				exit(EXIT_FAILURE);
 			}
-		}
-		while (!WIFEXITED(status) && !WIFSIGNALED(status));
+		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 	}
 }
