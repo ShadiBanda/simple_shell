@@ -52,11 +52,12 @@ void execute_program(const char *program_path, char *argv[])
 	else
 	{
 		int status;
-		waitpid(child_pid, &status, 0);
 
+		waitpid(child_pid, &status, 0);
 		if (WIFEXITED(status))
 		{
 			int exit_status = WEXITSTATUS(status);
+
 			if (exit_status != 0)
 			{
 				fprintf(stderr, "Program '%s' exited with non-zero status: %d\n", program_path, exit_status);
@@ -68,6 +69,7 @@ void execute_program(const char *program_path, char *argv[])
 			fprintf(stderr, "Program '%s' terminated by signal: %d\n", program_path, WTERMSIG(status));
 			_exit(EXIT_FAILURE);
 		}
+		return;
 	}
 }
 
@@ -95,7 +97,12 @@ int search_program(const char *name, const char *path_env, char *argv[])
 		print_error("Memory allocation failed");
 
 	path_token = strtok(path_env_copy, ":");
-
+	if (name[0] == '/')
+	{
+		check_executable(name, argv);
+		fprintf(stderr, "Error: Program '%s' not found or not executable.\n", name);
+		exit(EXIT_FAILURE);
+	}
 	while (path_token != NULL)
 	{
 		char *program_path = malloc(strlen(path_token) + strlen(name) + 2);

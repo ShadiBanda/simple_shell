@@ -8,6 +8,20 @@ void handle_command(char **tokens)
 {
 	if (_strcmp(tokens[0], "my_environ") == 0)
 		my_environ();
+	else if (tokens[0][0] == '/')
+	{
+		if (access(tokens[0], X_OK) == 0)
+		{
+			execv(tokens[0], tokens);
+			perror("execv");
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+			fprintf(stderr, "Error: Program '%s' not found or not executable.\n", tokens[0]);
+			exit(EXIT_FAILURE);
+		}
+	}
 	else if (_strcmp(tokens[0], "ls") == 0)
 	{
 		if (tokens[1] != NULL && _strcmp(tokens[1], "-l") == 0)
@@ -64,7 +78,7 @@ void run_shell(void)
 	while (1)
 	{
 		prompt();
-		cmdline = get_line(&command, &x, stdin);
+		cmdline = getline(&command, &x, stdin);
 		if (cmdline == -1)
 		{
 			printf("Exiting shell...\n");
