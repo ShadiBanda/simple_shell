@@ -63,7 +63,7 @@ void process_input(char *command)
 		if (_strcmp(tokens[0], "exit") == 0)
 		{
 			if (tokens[1] != NULL)
-				exit_shell(tokens);
+				exit_shell(tokens[1]);
 			else
 				exit_shell(NULL);
 		}
