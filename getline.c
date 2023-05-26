@@ -43,6 +43,7 @@ int realloc_line(char **line, size_t *n)
 
 /**
  * prompt - prints the shell prompt for the user
+ * @stream: ptr to user input stream
  */
 void prompt(FILE *stream)
 {
@@ -70,9 +71,7 @@ ssize_t get_line(char **line, size_t *n, FILE *stream)
 	int x;
 
 	if (line == NULL || n == NULL)
-	{
 		return (-1);
-	}
 	if (*line == NULL || *n == 0)
 	{
 		*n = 128;

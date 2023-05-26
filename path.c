@@ -60,13 +60,15 @@ void execute_program(const char *program_path, char *argv[])
 
 			if (exit_status != 0)
 			{
-				fprintf(stderr, "Program '%s' exited with non-zero status: %d\n", program_path, exit_status);
+				fprintf(stderr, "Program '%s' exited with non-zero status: %d\n",
+						program_path, exit_status);
 				_exit(EXIT_FAILURE);
 			}
 		}
 		else if (WIFSIGNALED(status))
 		{
-			fprintf(stderr, "Program '%s' terminated by signal: %d\n", program_path, WTERMSIG(status));
+			fprintf(stderr, "Program '%s' terminated by signal: %d\n",
+					program_path, WTERMSIG(status));
 			_exit(EXIT_FAILURE);
 		}
 		return;

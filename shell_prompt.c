@@ -2,7 +2,6 @@
 /**
  * handle_command - Handle the execution of a command
  * @tokens: Array of command tokens
- * @env: Array of environment variables
  */
 void handle_command(char **tokens)
 {
@@ -18,7 +17,8 @@ void handle_command(char **tokens)
 		}
 		else
 		{
-			fprintf(stderr, "Error: Program '%s' not found or not executable.\n", tokens[0]);
+			fprintf(stderr, "Error: Program '%s' not found or not executable.\n",
+					tokens[0]);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -50,7 +50,6 @@ void handle_command(char **tokens)
 /**
  * process_input - Process the user input
  * @command: Input command string
- * @env: Array of environment variables
  * Return: 0 or otherwise
  */
 void process_input(char *command)
@@ -76,7 +75,6 @@ void process_input(char *command)
 
 /**
  * run_shell - Run the shell prompt loop
- * @env: Array of environment variables
  */
 void run_shell(void)
 {
@@ -104,7 +102,7 @@ void run_shell(void)
  * main - entry point
  * @argc: argument count
  * @argv: ptr to array of strings
- * return: 0 or otherwise
+ * Return: 0 or otherwise
  */
 int main(int argc, char **argv)
 {
@@ -117,7 +115,7 @@ int main(int argc, char **argv)
 			if (argc > 2)
 			{
 				int num_executions = argc - 2;
-				
+
 				for (x = 0; x < num_executions; x++)
 					search_program("ls", getenv("PATH"), argv + 2);
 			}
