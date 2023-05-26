@@ -5,7 +5,7 @@
  */
 void handle_command(char **tokens)
 {
-	if (_strcmp(tokens[0], "my_environ") == 0)
+	if (_strcmp(tokens[0], "env") == 0)
 		my_environ();
 	else if (tokens[0][0] == '/')
 	{
@@ -89,7 +89,6 @@ void run_shell(void)
 		cmdline = get_line(&command, &x, stdin);
 		if (cmdline == -1)
 		{
-			printf("Exiting shell...\n");
 			free(command);
 			return;
 		}
