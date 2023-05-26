@@ -86,8 +86,8 @@ void run_shell(void)
 
 	while (1)
 	{
-		prompt();
-		cmdline = getline(&command, &x, stdin);
+		prompt(stdin);
+		cmdline = get_line(&command, &x, stdin);
 		if (cmdline == -1)
 		{
 			printf("Exiting shell...\n");
@@ -108,21 +108,22 @@ void run_shell(void)
  */
 int main(int argc, char **argv)
 {
+	int x;
+
 	if (argc > 1)
 	{
 		if (strcmp(argv[1], "ls") == 0)
 		{
 			if (argc > 2)
 			{
-				if (!search_program("ls", getenv("PATH"), argv + 2))
-				{
-					handle_unrecognized_command(argv + 2);
-				}
+				int num_executions = argc - 2;
+				
+				for (x = 0; x < num_executions; x++)
+					search_program("ls", getenv("PATH"), argv + 2);
 			}
 			else
 			{
-				if (!search_program("ls", getenv("PATH"), argv))
-					handle_unrecognized_command(argv);
+				search_program("ls", getenv("PATH"), argv);
 			}
 		}
 	}

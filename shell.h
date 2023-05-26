@@ -34,7 +34,7 @@ int command_check(const char *command);
 ssize_t read_buf(char *buf, size_t *buf_index, size_t *buf_size, FILE *stream);
 int realloc_line(char **line, size_t *n);
 ssize_t get_line(char **line, size_t *n, FILE *stream);
-void prompt(void);
+void prompt(FILE *stream);
 
 /* Exit.c */
 int exit_shell(char **arr);

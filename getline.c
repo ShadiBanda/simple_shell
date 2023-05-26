@@ -44,10 +44,13 @@ int realloc_line(char **line, size_t *n)
 /**
  * prompt - prints the shell prompt for the user
  */
-void prompt(void)
+void prompt(FILE *stream)
 {
-	printf("$ ");
-	fflush(stdout);
+	if (isatty(fileno(stream)))
+	{
+		printf("$ ");
+		fflush(stdout);
+	}
 }
 
 /**
@@ -97,5 +100,7 @@ ssize_t get_line(char **line, size_t *n, FILE *stream)
 	if (length == 0 && read_chars == 0)
 		return (-1);
 	(*line)[length] = '\0';
+	if ((*line)[length - 1] == '\n')
+		(*line)[length - 1] = '\0';
 	return (length);
 }
