@@ -14,16 +14,13 @@ int exit_shell(char **arr)
 
 	if (arr[1] == NULL)
 		return (0);
-	else
+	exit_code = atoi(arr[1]);
+	if (exit_code == 0)
 	{
-		exit_code = atoi(arr[1]);
-		if (exit_code == 0)
-		{
-			write(STDERR_FILENO, "exit: ", 6);
-			write(STDERR_FILENO, arr[1], strlen(arr[1]));
-			write(STDERR_FILENO, ": numeric argument required\n", 28);
-			return (-1);
-		}
+		write(STDERR_FILENO, "exit: ", 6);
+		write(STDERR_FILENO, arr[1], strlen(arr[1]));
+		write(STDERR_FILENO, ": numeric argument required\n", 28);
+		return (-1);
 	}
 	return (exit_code);
 }
