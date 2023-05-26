@@ -52,12 +52,21 @@ void execute_program(const char *program_path, char *argv[])
 	else
 	{
 		int status;
+		waitpid(child_pid, &status, 0);
 
-		wait(&status);
-		if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+		if (WIFEXITED(status))
 		{
-			/* Child process exited with status 0 (success) */
-			exit(EXIT_SUCCESS);
+			int exit_status = WEXITSTATUS(status);
+			if (exit_status != 0)
+			{
+				fprintf(stderr, "Program '%s' exited with non-zero status: %d\n", program_path, exit_status);
+				_exit(EXIT_FAILURE);
+			}
+		}
+		else if (WIFSIGNALED(status))
+		{
+			fprintf(stderr, "Program '%s' terminated by signal: %d\n", program_path, WTERMSIG(status));
+			_exit(EXIT_FAILURE);
 		}
 	}
 }
@@ -75,15 +84,17 @@ void execute_program(const char *program_path, char *argv[])
  * in each directory specified by the PATH environment variable.
  * If the program is found, it is executed with the provided arguments.
  * If the program is not found, an error message is printed.
+ * Return: 0 or 1 if found
  */
-void search_program(const char *name, const char *path_env, char *argv[])
+int search_program(const char *name, const char *path_env, char *argv[])
 {
 	char *path_env_copy = strdup(path_env);
+	char *path_token;
 
 	if (path_env_copy == NULL)
 		print_error("Memory allocation failed");
 
-	char *path_token = strtok(path_env_copy, ":");
+	path_token = strtok(path_env_copy, ":");
 
 	while (path_token != NULL)
 	{
@@ -95,44 +106,18 @@ void search_program(const char *name, const char *path_env, char *argv[])
 		strcpy(program_path, path_token);
 		strcat(program_path, "/");
 		strcat(program_path, name);
-
-		execute_program(program_path, argv);
+		if (access(program_path, X_OK) == 0)
+		{
+			execute_program(program_path, argv);
+			free(program_path);
+			free(path_env_copy);
+			return (1);
+		}
 
 		free(program_path);
 		path_token = strtok(NULL, ":");
 	}
-
 	free(path_env_copy);
 	fprintf(stderr, "Error: Program '%s' not found in PATH.\n", name);
-	exit(EXIT_FAILURE);
-}
-
-/**
- * main - Entry point of the program.
- * @argc: The number of command-line arguments.
- * @argv: An array of command-line argument strings.
- *
- * Return: 0 on success, otherwise 1.
- */
-int main(int argc, char *argv[])
-{
-	if (argc < 2)
-	{
-		fprintf(stderr, "Usage: %s <program>\n", argv[0]);
-		return (1);
-	}
-
-	const char *program_name = argv[1];
-	const char *path_env = getenv("PATH");
-
-	if (path_env == NULL)
-	{
-		fprintf(stderr, "Error: PATH environment variable not set.\n");
-		return (1);
-	}
-
-	search_program(program_name, path_env, argv + 1);
-
 	return (0);
 }
-

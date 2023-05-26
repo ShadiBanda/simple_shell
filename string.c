@@ -17,7 +17,7 @@ char *getenvr(const char *name, char *env[])
 	}
 	for (x = 0; env[x] != NULL; x++)
 	{
-		if (_strncmp(name, env[x], name_length) == 0 && env[x][name_length] == '=')
+		if (strncmp(name, env[x], name_length) == 0 && env[x][name_length] == '=')
 		{
 			return (env[x] + name_length + 1);
 		}

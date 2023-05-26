@@ -19,15 +19,13 @@
 
 int tokenizer(char *str, const char *delimiters, char *tokens[]);
 
-/* builtin1.c */
-void execute_ls_command(int numwords, char **tokens);
-
 /* Errors */
 void display_error(const char *message);
 void handle_unrecognized_command(char *tokens[]);
 
 /* Environment.c */
-int my_environ(char *details);
+extern char **environ;
+int my_environ(void);
 
 /* Pars */
 int command_check(const char *command);
@@ -50,8 +48,7 @@ int _strcmp(char *s1, char *s2);
 void check_executable(const char *path, char *argv[]);
 void print_error(const char *msg);
 void execute_program(const char *program_path, char *argv[]);
-void search_program(const char *name, const char *path_env, char *argv[]);
-int main(int argc, char *argv[]);
+int search_program(const char *name, const char *path_env, char *argv[]);
 
 /* Strings */
 int _strlen(char *s);

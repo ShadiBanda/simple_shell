@@ -4,18 +4,20 @@
  * @tokens: Array of command tokens
  * @env: Array of environment variables
  */
-void handle_command(char **tokens, char **env)
+void handle_command(char **tokens)
 {
-	char *cmd_path;
-
 	if (_strcmp(tokens[0], "my_environ") == 0)
 		my_environ();
 	else if (_strcmp(tokens[0], "ls") == 0)
 	{
 		if (tokens[1] != NULL)
-			list_dir(".", tokens[1]);
+			search_program("ls", getenv("PATH"), tokens + 1);
 		else
-			list_dir(".", "");
+		{
+			if (!search_program("ls", getenv("PATH"), tokens))
+				handle_unrecognized_command(tokens);
+		}
+
 	}
 	else if (_strcmp(tokens[0], "exit") == 0)
 	{
@@ -25,13 +27,7 @@ void handle_command(char **tokens, char **env)
 			exit_shell(NULL);
 	}
 	else
-	{
-		cmd_path = find_cmd_path(tokens[0], env);
-		if (cmd_path != NULL)
-			_exec_command(cmd_path, env);
-		else
-			handle_unrecognized_command(tokens);
-	}
+		handle_unrecognized_command(tokens);
 }
 
 /**
@@ -40,7 +36,7 @@ void handle_command(char **tokens, char **env)
  * @env: Array of environment variables
  * Return: 0 or otherwise
  */
-void process_input(char *command, char **env)
+void process_input(char *command)
 {
 	char *tokens[MAX_TOKENS] = {NULL};
 	int numwords;
@@ -48,14 +44,14 @@ void process_input(char *command, char **env)
 	numwords = tokenizer(command, " \t\r\n\a", tokens);
 	tokens[numwords] = NULL;
 	if (numwords > 0)
-		handle_command(tokens, env);
+		handle_command(tokens);
 }
 
 /**
  * run_shell - Run the shell prompt loop
  * @env: Array of environment variables
  */
-void run_shell(char **env)
+void run_shell(void)
 {
 	char *command = NULL;
 	size_t x = 0;
@@ -71,31 +67,37 @@ void run_shell(char **env)
 			free(command);
 			return;
 		}
-		process_input(command, env);
+		process_input(command);
 	}
 	free(command);
 }
 
 /**
- * main - entry point for shell
+ * main - entry point
  * @argc: argument count
  * @argv: ptr to array of strings
- * Return: 0 or otherwise
+ * return: 0 or otherwise
  */
 int main(int argc, char **argv)
 {
-	char *env[] = {NULL};
-
 	if (argc > 1)
 	{
 		if (strcmp(argv[1], "ls") == 0)
 		{
 			if (argc > 2)
-				list_dir(argv[2], "");
+			{
+				if (!search_program("ls", getenv("PATH"), argv + 2))
+				{
+					handle_unrecognized_command(argv + 2);
+				}
+			}
 			else
-				list_dir(".", "");
+			{
+				if (!search_program("ls", getenv("PATH"), argv))
+					handle_unrecognized_command(argv);
+			}
 		}
 	}
-	run_shell(env);
+	run_shell();
 	return (0);
 }
