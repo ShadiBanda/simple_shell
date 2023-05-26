@@ -40,11 +40,10 @@ void handle_command(char **tokens)
 			}
 		}
 		else
-		{
-			if (!search_program("ls", getenv("PATH"), tokens))
-				handle_unrecognized_command(tokens);
-		}
+			search_program("ls", getenv("PATH"), tokens);
 	}
+	else
+		handle_unrecognized_command(tokens);
 }
 
 /**
@@ -108,7 +107,7 @@ void run_shell(void)
 void handle_commandtoo(char **tokens, int num_tokens)
 {
 	int x;
-	
+
 	for (x = 1; x < num_tokens; x++)
 	{
 		printf("%s ", tokens[x]);
