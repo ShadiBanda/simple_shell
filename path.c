@@ -38,12 +38,11 @@ void print_error(const char *msg)
  */
 void execute_program(const char *program_path, char *argv[])
 {
+	int x, status, exit_status;
 	pid_t child_pid = fork();
 
 	if (strcmp(program_path, "echo") == 0)
 	{
-		int x;
-
 		for (x = 1; argv[x] != NULL; x++)
 			printf("%s ", argv[x]);
 		printf("\n");
@@ -56,18 +55,13 @@ void execute_program(const char *program_path, char *argv[])
 			exit(EXIT_FAILURE);
 		}
 		else if (child_pid == 0)
-		{
 			check_executable(program_path, argv);
-		}
 		else
 		{
-			int status;
-
 			waitpid(child_pid, &status, 0);
 			if (WIFEXITED(status))
 			{
-				int exit_status = WEXITSTATUS(status);
-				
+				exit_status = WEXITSTATUS(status);
 				if (exit_status != 0)
 				{
 					fprintf(stderr, "Program '%s' exited with non-zero status: %d\n",
