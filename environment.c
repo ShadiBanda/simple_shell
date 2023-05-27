@@ -69,16 +69,19 @@ int shell_setenv(char **args)
  */
 int handle_setenv(char **args)
 {
-	if (args[1] == NULL || args[2] == NULL)
+	if (args[1] == NULL )
 	{
-		fprintf(stderr, "setenv: Missing argument\n");
-		return (-1);
+		my_environ();
+		return (0);
 	}
+	if (args[2] == NULL)
+		args[2] = "";
 	if (setenv(args[1], args[2], 1) == -1)
 	{
 		perror("setenv");
 		return (-1);
 	}
+	my_environ();
 	return (0);
 }
 
@@ -99,5 +102,6 @@ int handle_unsetenv(char **args)
 		perror("unsetenv");
 		return (-1);
 	}
+	my_environ();
 	return (0);
 }
