@@ -7,6 +7,20 @@ void handle_command(char **tokens)
 {
 	if (_strcmp(tokens[0], "env") == 0)
 		my_environ();
+	else if (_strcmp(tokens[0], "setenv") == 0)
+	{
+		if (tokens[1] != NULL && tokens[2] != NULL)
+			my_setenv(tokens[1], tokens[2]);
+		else
+			fprintf(stderr, "setenv: Invalid command format\n");
+	}
+	else if (_strcmp(tokens[0], "unsetenv") == 0)
+	{
+		if (tokens[1] != NULL)
+			my_unsetenv(tokens[1]);
+		else
+			fprintf(stderr, "unsetenv: Missing variable\n");
+	}
 	else if (tokens[0][0] == '/')
 	{
 		if (access(tokens[0], X_OK) == 0)
