@@ -37,7 +37,7 @@ ssize_t get_line(char **line, size_t *n, FILE *stream);
 void prompt(FILE *stream);
 
 /* Exit.c */
-int exit_shell(char **arr);
+int exit_shell(char *arg);
 
 /* String.c */
 int _strlen(char *s);

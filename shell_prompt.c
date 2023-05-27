@@ -54,7 +54,7 @@ void handle_command(char **tokens)
 void process_input(char *command)
 {
 	char *tokens[MAX_TOKENS] = {NULL};
-	int numwords;
+	int numwords, exit_status;
 
 	numwords = tokenizer(command, " \t\r\n\a", tokens);
 	tokens[numwords] = NULL;
@@ -63,9 +63,15 @@ void process_input(char *command)
 		if (_strcmp(tokens[0], "exit") == 0)
 		{
 			if (tokens[1] != NULL)
-				exit_shell(tokens);
+			{
+				exit_status = exit_shell(tokens[1]);
+				exit(exit_status);
+			}
 			else
-				exit_shell(NULL);
+			{
+				exit_status = exit_shell(NULL);
+				exit(exit_status);
+			}
 		}
 		else if (_strcmp(tokens[0], "echo") == 0)
 			handle_commandtoo(tokens, numwords);

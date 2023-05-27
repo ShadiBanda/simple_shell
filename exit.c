@@ -6,24 +6,23 @@
 
 /**
  * exit_shell - Exit the shell.
- * @arr: Array of command arguments.
- * Return: Integer representing the exit code or -1
+ * @arg: Array of command arguments.
+ * Return: Integer representing the exit code or 2.
  */
-int exit_shell(char **arr)
+int exit_shell(char *arg)
 {
-	int exit_code = 0;
+	int exit_status;
 
-	if (arr && arr[1] != NULL)
+	if (arg != NULL)
 	{
-		if (exit_code == 0 && strcmp(arr[1], "0") != 0)
+		exit_status = atoi(arg);
+		if (exit_status == 0 && strcmp(arg, "0") != 0)
 		{
-			fprintf(stderr, "exit: %s: numeric argument required\n", arr[1]);
-			return (-1);
+			fprintf(stderr, "exit: Illegal number: %s\n", arg);
+			return (2);
 		}
-		else
-			exit(exit_code);
+		return (exit_status);
 	}
 	else
-		exit(0);
-	return (0);
+		return (0);
 }
