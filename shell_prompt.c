@@ -74,9 +74,9 @@ void process_input(char *command)
 			}
 		}
 		else if (_strcmp(tokens[0], "setenv") == 0)
-			handle_setenv(tokens);
+			my_environ();
 		else if (_strcmp(tokens[0], "unsetenv") == 0)
-			handle_unsetenv(tokens);
+			my_environ();
 		else if (_strcmp(tokens[0], "echo") == 0)
 			handle_commandtoo(tokens, numwords);
 		else
