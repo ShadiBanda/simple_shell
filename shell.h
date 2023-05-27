@@ -26,6 +26,8 @@ void handle_unrecognized_command(char *tokens[]);
 /* Environment.c */
 extern char **environ;
 int my_environ(void);
+int my_unsetenv(const char *variable);
+int my_setenv(const char *variable, const char *value);
 
 /* Pars */
 int command_check(const char *command);
